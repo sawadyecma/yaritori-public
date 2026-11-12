@@ -1,0 +1,9 @@
+node_modules/
+# デプロイの出力（API・読む画面の Function URL が入る）。コミットしない
+infra/cdk-outputs.json
+cdk.out/
+dist/
+# キー（YARITORI_KEY）を置く。コミットしない
+.env
+.DS_Store
+.wrangler/

@@ -1,0 +1,9 @@
+{
+  "app": "npx tsx bin/yaritori.ts",
+  "watch": { "exclude": ["cdk.out/**", "node_modules/**"] },
+  "context": {
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true
+  }
+}

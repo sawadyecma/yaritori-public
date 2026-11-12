@@ -1,0 +1,16 @@
+# 静的ファイルの応答ヘッダー（Cloudflare Workers の静的ファイルが読む）。/api と /auth は Lambda が付ける
+#
+# Content-Security-Policy：読み込んでよいものを自分のドメインだけに絞る。
+# 部屋の中身はほかの書き手（Muse など）が書いたデータなので、本文に何が紛れ込んでも、よそのスクリプトを動かせず、
+# よそへデータを送れず、よその画像で開いたことを知らせない（本文の画像は表示しない）ようにする保険。
+# 画像と動画は yaritori のバケットだけ（添付のサイドピーク。署名付き URL で埋め込む）。__STORE_BUCKET__ は、
+# deploy.mjs（本番）と viewer-local.ts（手元）が infra/cdk-outputs.json の StoreBucket で埋める。
+# S3 は「どのバケットでも」にしない（よそのバケットの画像まで読めてしまう）。
+# md・テキストの添付は Viewer が読んで返すので、connect-src は自分のドメインのまま。
+# **足りないと黙って映らなくなる。** 直したら手元で開いて、ブラウザのコンソールに CSP の違反が出ていないか確かめてから出す
+/*
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' https://__STORE_BUCKET__.s3.ap-northeast-1.amazonaws.com; media-src https://__STORE_BUCKET__.s3.ap-northeast-1.amazonaws.com; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'

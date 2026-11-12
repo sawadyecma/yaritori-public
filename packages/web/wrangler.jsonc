@@ -1,0 +1,19 @@
+{
+  // 読む画面。画面（dist/）は静的ファイルとして配り、/api と /auth だけ worker.ts が Lambda「Viewer」へ中継する。
+  // 出すときは `npm run deploy:web`（画面をビルドしてから wrangler deploy。認証は .env の CLOUDFLARE_*）。
+  // ドメインと中継先はここに書かない。deploy.mjs が infra/cdk-outputs.json の WebUrl（--domain）と ViewerFunctionUrl（--var LAMBDA_ORIGIN）から渡す
+  // （正本を cdk-outputs.json の1か所にする。ドメインの正本は .env の YARITORI_WEB_ORIGIN）
+  "name": "yaritori-web",
+  "main": "./worker.ts",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // この2つだけ worker.ts を通す。ほかは静的ファイルをそのまま返す
+    "run_worker_first": ["/api/*", "/auth/*"],
+    // #/r/… の画面はハッシュで切り替えるので、知らないパスは 404 のままでよい
+    "not_found_handling": "none"
+  },
+  // workers.dev の URL は出さない（入口は自分のドメインだけ。ドメインは同じアカウントの Cloudflare に置いておく）
+  "workers_dev": false
+}

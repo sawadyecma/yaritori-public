@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      # docs/openapi.yaml は生成物。コードと食い違っていたら落とす
+      - run: npm run openapi && git diff --exit-code docs/openapi.yaml
+      # AWS の認証なしで組めることだけ見る（デプロイは手元から）
+      - run: npm run synth

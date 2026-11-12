@@ -1,0 +1,29 @@
+{
+  "name": "yaritori",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "infra"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "openapi": "npm run openapi --workspace @yaritori/api",
+    "yaritori": "tsx packages/cli/src/main.ts",
+    "synth": "npm run synth --workspace @yaritori/infra",
+    "diff": "npm run diff --workspace @yaritori/infra",
+    "deploy": "npm run deploy --workspace @yaritori/infra",
+    "web": "npm run build --workspace @yaritori/web && tsx packages/api/src/viewer-local.ts",
+    "deploy:web": "npm run deploy --workspace @yaritori/web"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
